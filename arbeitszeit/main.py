@@ -23,7 +23,8 @@ CONFIG_PATH = Path(user_config_dir(APP_NAME)) / "config.yaml"
 EDITOR = os.getenv("EDITOR", "open")
 DATE_PATTERN = "%Y-%m-%d"
 DAY_PATTERN = "%a"
-DATE_REGEX = r"[A-z ]{3} [0-9]{4}-[0-9]{2}-[0-9]{2}"
+DATE_REGEX = r"[0-9]{4}-[0-9]{2}-[0-9]{2}"
+DAY_REGEX = r"[A-z ]{3}"
 NONE_TIME = "--:--"
 TIME_PATTERN = "%H:%M"
 TIME_REGEX = "(" + "|".join(["[0-9]{2}:[0-9]{2}", NONE_TIME]) + ")"
@@ -95,7 +96,8 @@ def is_time(time: str) -> bool:
 
 
 def is_record(text: str) -> bool:
-    return re.match(f"{DATE_REGEX} {TIME_REGEX} {TIME_REGEX}", text)
+    pattern = " ".join([DAY_REGEX, DATE_REGEX, TIME_REGEX, TIME_REGEX])
+    return re.match(pattern, text)
 
 
 def text_to_date(text: str) -> dt.date:
