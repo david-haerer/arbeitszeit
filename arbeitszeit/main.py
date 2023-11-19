@@ -26,7 +26,7 @@ DAY_PATTERN = "%a"
 DATE_REGEX = r"[A-z ]{3} [0-9]{4}-[0-9]{2}-[0-9]{2}"
 NONE_TIME = "--:--"
 TIME_PATTERN = "%H:%M"
-TIME_REGEX = "[0-9]{2}:[0-9]{2}|{NONE_TIME}"
+TIME_REGEX = "(" + "|".join(["[0-9]{2}:[0-9]{2}", NONE_TIME]) + ")"
 
 
 # -- CONFIG --
