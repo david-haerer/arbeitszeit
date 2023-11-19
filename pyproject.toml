@@ -5,6 +5,7 @@ description = "Track your worktime."
 authors = ["David Härer <david@haerer.dev>"]
 readme = "README.md"
 repository = "https://github.com/david-haerer/arbeitszeit"
+license = "MIT"
 
 [tool.poetry.scripts]
 arbeitszeit = "arbeitszeit.__main__:app"
