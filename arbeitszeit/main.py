@@ -22,7 +22,7 @@ APP_NAME = "arbeitszeit"
 CONFIG_PATH = Path(user_config_dir(APP_NAME)) / "config.yaml"
 EDITOR = os.getenv("EDITOR", "open")
 DATE_PATTERN = "%Y-%m-%d"
-DATE_PATTERN_PREFIX = "%a "
+DAY_PATTERN = "%a"
 DATE_REGEX = r"[A-z ]{3} [0-9]{4}-[0-9]{2}-[0-9]{2}"
 NONE_TIME = "--:--"
 TIME_PATTERN = "%H:%M"
@@ -103,7 +103,7 @@ def text_to_date(text: str) -> dt.date:
 
 
 def date_to_text(date: date) -> str:
-    return date.strftime(DATE_PATTERN_PREFIX + DATE_PATTERN)
+    return date.strftime(f"{DAY_PATTERN} {DATE_PATTERN}")
 
 
 def text_to_time(text: str) -> time | None:
