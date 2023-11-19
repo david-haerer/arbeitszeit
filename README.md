@@ -60,7 +60,7 @@ By default the app will use the current time.
 ```sh
 arbeitszeit stop
 # or
-arbeitszeit stop 09:00
+arbeitszeit stop 17:00
 ```
 
 ### Edit your worktime records
