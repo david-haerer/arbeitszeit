@@ -155,47 +155,47 @@ def sum_timedeltas(timedeltas: list[dt.timedelta]) -> dt.timedelta:
 class Record(BaseModel):
     day: dt.date = Field(default_factory=today)
     start: Optional[dt.time] = None
-    end: Optional[dt.time] = None
+    stop: Optional[dt.time] = None
 
     @model_validator(mode="after")
-    def check_either_start_or_end(self) -> Record:
-        if (self.start, self.end) == (None, None):
-            raise ValueError("Either start or end must be set!")
+    def check_either_start_or_stop(self) -> Record:
+        if (self.start, self.stop) == (None, None):
+            raise ValueError("Either start or stop must be set!")
         return self
 
     @model_validator(mode="after")
-    def check_start_before_end(self) -> Record:
-        if None in (self.start, self.end):
+    def check_start_before_stop(self) -> Record:
+        if None in (self.start, self.stop):
             return self
-        if self.start > self.end:
-            raise ValueError("Start must come before end!")
+        if self.start > self.stop:
+            raise ValueError("Start must come before stop!")
         return self
 
     @classmethod
     def from_text(cls, text) -> Record:
         assert is_record(text)
-        day, start, end = text[4:].split(" ")
+        day, start, stop = text[4:].split(" ")
         return Record(
-            day=text_to_date(day), start=text_to_time(start), end=text_to_time(end)
+            day=text_to_date(day), start=text_to_time(start), stop=text_to_time(stop)
         )
 
     @classmethod
     def from_start(cls, start) -> Record:
         assert is_time(start)
         assert start != NONE_TIME
-        return Record(day=today(), start=text_to_time(start), end=None)
+        return Record(day=today(), start=text_to_time(start), stop=None)
 
     @classmethod
-    def from_end(cls, end) -> Record:
+    def from_stop(cls, stop) -> Record:
         assert is_time(start)
-        assert end != NONE_TIME
-        return Record(day=today(), start=None, end=text_to_time(start))
+        assert stop != NONE_TIME
+        return Record(day=today(), start=None, stop=text_to_time(start))
 
     @property
     def worktime(self) -> dt.timedelta | None:
-        if None in (self.start, self.end):
+        if None in (self.start, self.stop):
             return None
-        return dt.datetime.combine(self.day, self.end) - dt.datetime.combine(
+        return dt.datetime.combine(self.day, self.stop) - dt.datetime.combine(
             self.day, self.start
         )
 
@@ -203,8 +203,8 @@ class Record(BaseModel):
     def text(self):
         day = date_to_text(self.day)
         start = time_to_text(self.start)
-        end = time_to_text(self.end)
-        return f"{day} {start} {end}"
+        stop = time_to_text(self.stop)
+        return f"{day} {start} {stop}"
 
     def __str__(self):
         worktime = timedelta_to_text(self.worktime)
@@ -345,11 +345,11 @@ class DB:
         self.records.append(Record(start=time))
         self.save()
 
-    def end(self, time: str):
-        if self.empty or self.last.end is not None:
-            self.records.append(Record(end=time))
+    def stop(self, time: str):
+        if self.empty or self.last.stop is not None:
+            self.records.append(Record(stop=time))
         else:
-            self.last.end = time
+            self.last.stop = time
         self.save()
 
 
@@ -373,14 +373,14 @@ def start(time: Annotated[Optional[str], typer.Argument()] = None):
 
 
 @app.command()
-def end(time: Annotated[Optional[str], typer.Argument()] = None):
+def stop(time: Annotated[Optional[str], typer.Argument()] = None):
     if time is None:
         time = now()
     else:
         assert is_time(time), f"Time string '{time}' is invalid!"
     config = Config(CONFIG_PATH)
     db = DB(config)
-    db.end(time)
+    db.stop(time)
 
 
 @app.command()

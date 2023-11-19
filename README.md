@@ -58,9 +58,9 @@ arbeitszeit start 09:00
 By default the app will use the current time.
 
 ```sh
-arbeitszeit end
+arbeitszeit stop
 # or
-arbeitszeit end 09:00
+arbeitszeit stop 09:00
 ```
 
 ### Edit your worktime records
