@@ -40,13 +40,15 @@ class Config:
         self._config = self.load()
 
     def load(self):
-        if self.path.is_file():
-            with open(self.path, "r", encoding="utf-8") as file:
-                return yaml.safe_load(file) or {}
-        with open(self.path, mode="wt", encoding="utf-8") as file:
-            yaml.dump({}, file)
-        if "path" in self._config:
-            self._config["path"] = Path(self._config["path"])
+        if not self.path.is_file():
+            with open(self.path, mode="wt", encoding="utf-8") as file:
+                yaml.dump({}, file)
+            return {}
+        with open(self.path, "r", encoding="utf-8") as file:
+            config = yaml.safe_load(file) or {}
+        if "path" in config:
+            config["path"] = Path(config["path"])
+        return config
 
     def save(self):
         if "path" in self._config:
