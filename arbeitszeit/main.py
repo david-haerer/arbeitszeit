@@ -391,8 +391,17 @@ def stop(time: Annotated[Optional[str], typer.Argument()] = None):
 def log():
     config = Config(CONFIG_PATH)
     db = DB(config)
-    for week in db.weeks:
+    weeks = db.weeks
+    for week in weeks:
         print(week)
+        print()
+    total_worktime = timedelta_to_text(
+        sum_timedeltas([week.worktime for week in weeks])
+    )
+    total_delta = signed_timedelta_to_text(
+        sum_timedeltas([week.delta for week in weeks])
+    )
+    print(f"Total: {total_worktime} [{total_delta}]")
 
 
 @app.command()
