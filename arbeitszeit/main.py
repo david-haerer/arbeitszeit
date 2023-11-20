@@ -307,8 +307,8 @@ class DB:
             try:
                 records.append(Record.from_text(line))
             except:
-                raise
                 print(f"{self.path}#L{lines.index(line)}: Invalid record '{line}'!")
+                print(f"Run '{APP_NAME} edit' to correct the record.")
                 exit()
         return records
 
