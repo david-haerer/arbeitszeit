@@ -179,9 +179,7 @@ class Record(BaseModel):
     def from_text(cls, text) -> Record:
         assert is_record(text)
         day, start, stop = text[4:].split(" ")
-        return Record(
-            day=text_to_date(day), start=text_to_time(start), stop=text_to_time(stop)
-        )
+        return Record(day=text_to_date(day), start=text_to_time(start), stop=text_to_time(stop))
 
     @classmethod
     def from_start(cls, start) -> Record:
@@ -199,9 +197,7 @@ class Record(BaseModel):
     def worktime(self) -> dt.timedelta | None:
         if None in (self.start, self.stop):
             return None
-        return dt.datetime.combine(self.day, self.stop) - dt.datetime.combine(
-            self.day, self.start
-        )
+        return dt.datetime.combine(self.day, self.stop) - dt.datetime.combine(self.day, self.start)
 
     @property
     def text(self):
@@ -283,9 +279,7 @@ class Week(BaseModel):
     def __str__(self) -> str:
         worktime = timedelta_to_text(self.worktime)
         delta = signed_timedelta_to_text(self.delta)
-        return "\n".join(
-            [f"{self.week}: {worktime} [{delta}]"] + [f"  {day}" for day in self.days]
-        )
+        return "\n".join([f"{self.week}: {worktime} [{delta}]"] + [f"  {day}" for day in self.days])
 
 
 # -- DB --
@@ -395,12 +389,8 @@ def log():
     for week in weeks:
         print(week)
         print()
-    total_worktime = timedelta_to_text(
-        sum_timedeltas([week.worktime for week in weeks])
-    )
-    total_delta = signed_timedelta_to_text(
-        sum_timedeltas([week.delta for week in weeks])
-    )
+    total_worktime = timedelta_to_text(sum_timedeltas([week.worktime for week in weeks]))
+    total_delta = signed_timedelta_to_text(sum_timedeltas([week.delta for week in weeks]))
     print(f"Total: {total_worktime} [{total_delta}]")
 
 
